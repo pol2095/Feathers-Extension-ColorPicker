@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 pol2095. -->
+<f:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:f="library://ns.feathersui.com/mxml"
+	xmlns:components="feathers.extensions.color.*"
+	theme="feathers.themes.MetalWorksDesktopTheme">
+	
+	<f:layout>
+		<f:VerticalLayout paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"/>
+	</f:layout>
+	
+	<components:ColorPicker id="colorPicker"/>
+</f:Application>
