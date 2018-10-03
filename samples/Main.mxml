@@ -5,9 +5,20 @@
 	xmlns:components="feathers.extensions.color.*"
 	theme="feathers.themes.MetalWorksDesktopTheme">
 	
+    <fx:Script>
+        <![CDATA[
+			private function getColor(event:Event):void
+			{
+                color.text = "0x" + colorPicker.color.toString(16).toUpperCase();
+            }
+        ]]>
+    </fx:Script>
+	
 	<f:layout>
 		<f:VerticalLayout paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"/>
 	</f:layout>
 	
 	<components:ColorPicker id="colorPicker"/>
+	<f:Button label="get color" triggered="getColor(event)"/>
+	<f:Label id="color"/>
 </f:Application>

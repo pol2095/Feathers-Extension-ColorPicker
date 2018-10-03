@@ -137,7 +137,7 @@ package feathers.extensions.color.components
 			var color:uint = bitmapData.getPixel( point.x * colorSpectrum.scale * owner.scaleFactor, point.y * colorSpectrum.scale * owner.scaleFactor );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
-			owner.colorQuad.color = color;
+			//owner.colorQuad.color = color;
 			createGradient(color);
 			//bitmapData.dispose();
 		}
@@ -181,7 +181,7 @@ package feathers.extensions.color.components
 			var color:uint = bitmapData.getPixel( point.x * gradient.scale * owner.scaleFactor, point.y * gradient.scale * owner.scaleFactor );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
-			owner.colorQuad.color = color;
+			//owner.colorQuad.color = color;
 			dispatchSliderChange = false;
 			slider.value = 100 - ( point.y * gradient.scale * 100 / gradient.height );
 			//bitmapData.dispose();
@@ -201,7 +201,7 @@ package feathers.extensions.color.components
 			var color:uint = bitmapData.getPixel( point.x, point.y );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
-			owner.colorQuad.color = color;
+			//owner.colorQuad.color = color;
 			//bitmapData.dispose();
 		}
 		
