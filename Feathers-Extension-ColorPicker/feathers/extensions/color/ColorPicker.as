@@ -227,10 +227,10 @@ package feathers.extensions.color
 		 */
 		override protected function initialize():void
 		{
-			dispatchInputChange = false;
 			colorText.validate();
 			colorText.width = colorText.minWidth;
 			colorQuad.size = colorText.height;
+			dispatchInputChange = false;
 			colorText.text = this.color.toString(16).toUpperCase();
 			colorText.dispatchEvent( new Event ( Event.CHANGE ) );
 			//colorQuad.color = this.color;
