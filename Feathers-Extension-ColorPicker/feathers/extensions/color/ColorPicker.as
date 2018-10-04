@@ -191,17 +191,6 @@ package feathers.extensions.color
 		 */
 		public var scaleFactor:Number = Starling.current.contentScaleFactor;
 		
-		/**
-		 * @private
-		 */
-		override public function set backgroundSkin(value:DisplayObject):void
-		{
-			super.backgroundSkin = value;
-			var skin:Image = new Image( (value as Image).texture );
-			skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
-			colorSelector.backgroundSkin = skin;
-		}
-		
 		public function ColorPicker()
 		{
 			super();
@@ -433,6 +422,17 @@ package feathers.extensions.color
 			{
 				PopUpManager.centerPopUp( colorSelector );
 			}
+		}
+		
+		/**
+		 * @private
+		 */
+		override public function set backgroundSkin(value:DisplayObject):void
+		{
+			super.backgroundSkin = value;
+			var skin:Image = new Image( (value as Image).texture );
+			skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
+			colorSelector.backgroundSkin = skin;
 		}
 		
 		/**
