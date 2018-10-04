@@ -441,7 +441,8 @@ package feathers.extensions.color
 		override public function dispose():void
 		{
 			colorQuad.removeEventListener(TouchEvent.TOUCH, onColorQuadTouchEvent);
-		 
+			colorSelector.dispose();
+			
 			super.dispose();
 		}
 	}
