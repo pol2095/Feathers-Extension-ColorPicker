@@ -21,6 +21,7 @@ package feathers.extensions.color
 	import flash.display.Shape;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -190,6 +191,17 @@ package feathers.extensions.color
 		 */
 		public var scaleFactor:Number = Starling.current.contentScaleFactor;
 		
+		/**
+		 * @private
+		 */
+		override public function set backgroundSkin(value:DisplayObject):void
+		{
+			super.backgroundSkin = value;
+			var skin:Image = new Image( (value as Image).texture );
+			skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
+			colorSelector.backgroundSkin = skin;
+		}
+		
 		public function ColorPicker()
 		{
 			super();
@@ -234,20 +246,22 @@ package feathers.extensions.color
 			colorText.dispatchEvent( new Event ( Event.CHANGE ) );
 			//colorQuad.color = this.color;
 			
-			var shape:Shape = new Shape();
-			shape.graphics.beginFill(backgroundBorderColor);
-			shape.graphics.drawRect(0, 0, 100, 100);
-			shape.graphics.endFill();
-			shape.graphics.beginFill(backgroundColor);
-			shape.graphics.drawRect(1, 1, 98, 98);
-			shape.graphics.endFill();
-			var bitmapData:BitmapData = new BitmapData( shape.width, shape.height );
-			bitmapData.draw( shape );
-			var skin:Image = new Image( Texture.fromBitmap( new Bitmap( bitmapData ) ) );
-			skin.scale = 0.1;
-			skin.scale9Grid = new Rectangle( 1, 1, 98, 98 );
-			this.backgroundSkin = skin;
-			//bitmapData.dispose();
+			if( ! this.backgroundSkin )
+			{
+				var shape:Shape = new Shape();
+				shape.graphics.beginFill(backgroundBorderColor);
+				shape.graphics.drawRect(0, 0, 10, 10);
+				shape.graphics.endFill();
+				shape.graphics.beginFill(backgroundColor);
+				shape.graphics.drawRect(1, 1, 8, 8);
+				shape.graphics.endFill();
+				var bitmapData:BitmapData = new BitmapData( shape.width, shape.height );
+				bitmapData.draw( shape );
+				var skin:Image = new Image( Texture.fromBitmap( new Bitmap( bitmapData ) ) );
+				skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
+				this.backgroundSkin = skin;
+				//bitmapData.dispose();
+			}
 		}
 		
 		private function onInputChange(event:Event):void

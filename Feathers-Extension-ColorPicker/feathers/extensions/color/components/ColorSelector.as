@@ -86,19 +86,18 @@ package feathers.extensions.color.components
 			slider.addEventListener(Event.CHANGE, sliderChangeHandler);
 			createGradient( owner.color );
 			
-			var shape:Shape = new Shape();
+			/*var shape:Shape = new Shape();
 			shape.graphics.beginFill(owner.backgroundBorderColor);
-			shape.graphics.drawRect(0, 0, 100, 100);
+			shape.graphics.drawRect(0, 0, 10, 10);
 			shape.graphics.endFill();
 			shape.graphics.beginFill(owner.backgroundColor);
-			shape.graphics.drawRect(1, 1, 98, 98);
+			shape.graphics.drawRect(1, 1, 8, 8);
 			shape.graphics.endFill();
 			var bitmapData:BitmapData = new BitmapData( shape.width, shape.height );
 			bitmapData.draw( shape );
 			var skin:Image = new Image( Texture.fromBitmap( new Bitmap( bitmapData ) ) );
-			skin.scale = 0.1;
-			skin.scale9Grid = new Rectangle( 1, 1, 98, 98 );
-			this.backgroundSkin = skin;
+			skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
+			this.backgroundSkin = skin;*/
 			//bitmapData.dispose();
 		}
 		
