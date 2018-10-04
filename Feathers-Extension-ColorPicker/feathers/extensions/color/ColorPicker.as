@@ -213,6 +213,7 @@ package feathers.extensions.color
 			colorText.width = colorText.minWidth;
 			colorQuad.size = colorText.height;
 			colorText.text = this.color.toString(16).toUpperCase();
+			colorText.dispatchEvent( new Event ( Event.CHANGE ) );
 			//colorQuad.color = this.color;
 			
 			var shape:Shape = new Shape();
@@ -243,19 +244,19 @@ package feathers.extensions.color
 				}
 			}
 			this._color = uint( "0x" + colorText.text );
-			var red:uint = (this._color & 0xFF0000) >> 16;
-			var green:uint = (this._color & 0x00FF00) >> 8;
-			var blue:uint = this._color & 0x0000FF;
-			var HSL:Object = rgbToHsl( red, green, blue );
 			colorQuad.color = this._color;
-			if( colorSelector.colorSpectrum.width == 0 ) colorSelector.validate();
-			colorSelector.targetQuad.x = HSL.h * colorSelector.colorSpectrum.width / 360 + (colorSelector.layout as HorizontalLayout).paddingLeft;
-			colorSelector.targetQuad.y = ( 100 - HSL.l ) * colorSelector.colorSpectrum.height / 100 + (colorSelector.layout as HorizontalLayout).paddingTop;
 			if( ! dispatchInputChange )
 			{
 				dispatchInputChange = true;
 				return;
 			}
+			var red:uint = (this._color & 0xFF0000) >> 16;
+			var green:uint = (this._color & 0x00FF00) >> 8;
+			var blue:uint = this._color & 0x0000FF;
+			var HSL:Object = rgbToHsl( red, green, blue );
+			if( colorSelector.colorSpectrum.width == 0 ) colorSelector.validate();
+			colorSelector.targetQuad.x = HSL.h * colorSelector.colorSpectrum.width / 360 + (colorSelector.layout as HorizontalLayout).paddingLeft;
+			colorSelector.targetQuad.y = ( 100 - HSL.l ) * colorSelector.colorSpectrum.height / 100 + (colorSelector.layout as HorizontalLayout).paddingTop;
 			colorSelector.createGradient(this._color);
 		}
 		

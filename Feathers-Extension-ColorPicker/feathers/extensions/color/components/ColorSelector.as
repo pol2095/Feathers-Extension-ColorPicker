@@ -117,22 +117,24 @@ package feathers.extensions.color.components
 			if( ! target ) return;*/
 			var rect:Rectangle = colorSpectrum.getBounds( colorSpectrum );
 			var point:Point = touch.getLocation( colorSpectrum );
-			if( ! rect.containsPoint( point ) ) return;
+			//if( ! rect.containsPoint( point ) ) return;
 			var _point:Point = touch.getLocation( this );
 			if(touch.phase == TouchPhase.BEGAN)
 			{
-				onColorTouch( point, _point );
+				onColorTouch( point, _point, true );
 			}
 			if(touch.phase == TouchPhase.MOVED)
 			{
-				onColorTouch( point, _point );
+				var touchIn:Boolean = rect.containsPoint( point );
+				onColorTouch( point, _point, touchIn );
 			}
 		}
 		
-		private function onColorTouch(point:Point, _point:Point):void
+		private function onColorTouch(point:Point, _point:Point, touchIn:Boolean):void
 		{
 			targetQuad.x = _point.x;
 			targetQuad.y = _point.y;
+			point = touchLimit( point, touchIn);
 			var bitmapData:BitmapData = colorSpectrum.drawToBitmapData();
 			var color:uint = bitmapData.getPixel( point.x * colorSpectrum.scale * owner.scaleFactor, point.y * colorSpectrum.scale * owner.scaleFactor );
 			owner.dispatchInputChange = false;
@@ -230,6 +232,32 @@ package feathers.extensions.color.components
 				PopUpManager.removePopUp( this );*/
 				owner.close();
 			}
+		}
+		
+		private function touchLimit(point:Point, touchIn:Boolean):Point
+		{
+			if( touchIn ) return point;
+			if( targetQuad.x < colorSpectrum.x )
+			{
+				targetQuad.x = colorSpectrum.x;
+				point.x = targetQuad.x - (this.layout as HorizontalLayout).paddingLeft;
+			}
+			else if( targetQuad.x > colorSpectrum.x + colorSpectrum.width )
+			{
+				targetQuad.x = colorSpectrum.x + colorSpectrum.width;
+				point.x = ( targetQuad.x - (this.layout as HorizontalLayout).paddingLeft ) / colorSpectrum.scale - 1;
+			}
+			if( targetQuad.y < colorSpectrum.y )
+			{
+				targetQuad.y = colorSpectrum.y;
+				point.y = targetQuad.y - (this.layout as HorizontalLayout).paddingTop;;
+			}
+			else if( targetQuad.y > colorSpectrum.y + colorSpectrum.height )
+			{
+				targetQuad.y = colorSpectrum.y + colorSpectrum.height;
+				point.y = ( targetQuad.y - (this.layout as HorizontalLayout).paddingTop ) / colorSpectrum.scale;
+			}
+			return point;
 		}
 		
 		override public function dispose():void
