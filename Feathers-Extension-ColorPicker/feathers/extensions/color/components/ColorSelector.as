@@ -14,7 +14,6 @@ package feathers.extensions.color.components
 	import feathers.extensions.color.ColorPicker;
 	import feathers.layout.Direction;
 	import feathers.layout.HorizontalLayout;
-	import feathers.layout.VerticalAlign;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.GradientType;
@@ -40,7 +39,7 @@ package feathers.extensions.color.components
 		public var colorSpectrum:ImageLoader = new ImageLoader();
 		public var targetQuad:TargetQuad = new TargetQuad();
 		private var gradient:ImageLoader = new ImageLoader();
-		private var slider:Slider = new Slider();
+		public var slider:Slider = new Slider();
 		private var dispatchSliderChange:Boolean;
 		
 		public function ColorSelector( owner:ColorPicker )
@@ -101,12 +100,6 @@ package feathers.extensions.color.components
 			skin.scale9Grid = new Rectangle( 1, 1, 98, 98 );
 			this.backgroundSkin = skin;
 			//bitmapData.dispose();
-		}
-		
-		public function enterFrameHandler(event:Event):void
-		{
-			this.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-			stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
 		}
 		
 		private function onColorTouchEvent(event:TouchEvent):void

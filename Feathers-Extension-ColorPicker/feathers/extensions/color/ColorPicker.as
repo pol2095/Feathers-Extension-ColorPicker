@@ -8,9 +8,9 @@ package feathers.extensions.color
 {
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
+	import feathers.controls.Slider;
 	import feathers.controls.TextInput;
 	import feathers.core.PopUpManager;
-	import feathers.events.FeathersEventType;
 	import feathers.extensions.color.components.ColorQuad;
 	import feathers.extensions.color.components.ColorSelector;
 	import feathers.extensions.color.components.Spacer;
@@ -21,7 +21,6 @@ package feathers.extensions.color
 	import flash.display.Shape;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import starling.display.Quad;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -46,7 +45,10 @@ package feathers.extensions.color
 		 * @private
 		 */
 		public var colorText:TextInput = new TextInput();
-		private var colorSelector:ColorSelector;
+		/**
+		 * @private
+		 */
+		protected var colorSelector:ColorSelector;
 		/**
 		 * @private
 		 */
@@ -165,6 +167,22 @@ package feathers.extensions.color
 				colorText.text = value.toString(16).toUpperCase();
 				colorText.dispatchEvent( new Event ( Event.CHANGE ) );
 			}
+		}
+		
+		/**
+		 * The text input to display the hexadecimal color value.
+		 */
+		public function get textInput():TextInput
+		{
+			return this.colorText;
+		}
+		
+		/**
+		 * The pop-up gradient slider.
+		 */
+		public function get slider():Slider
+		{
+			return this.colorSelector.slider;
 		}
 		
 		/**
@@ -295,6 +313,7 @@ package feathers.extensions.color
 					isOpen = true;
 					colorSelector.addEventListener(Event.ENTER_FRAME, colorSelector.enterFrameHandler);
 					stage.addEventListener(Event.RESIZE, positionRelative);*/
+					event.stopPropagation();
 					open();
 				}
 				/*else
@@ -315,7 +334,7 @@ package feathers.extensions.color
 				PopUpManager.addPopUp( colorSelector, false, false );
 				positionRelative();
 				isOpen = true;
-				colorSelector.addEventListener(Event.ENTER_FRAME, colorSelector.enterFrameHandler);
+				stage.addEventListener(TouchEvent.TOUCH, colorSelector.stage_touchHandler);
 				stage.addEventListener(Event.RESIZE, positionRelative);
 			}
 		}
