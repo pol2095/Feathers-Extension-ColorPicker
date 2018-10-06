@@ -42,6 +42,7 @@ package feathers.extensions.color.components
 		public var slider:Slider = new Slider();
 		private var dispatchSliderChange:Boolean;
 		private var colorSpectrumBitmapData:BitmapData;
+		public var isDispatchedColorQuadTouchBegan:Boolean; //Determines for touch began if an interactive DisplayObject is over colorQuad.
 		
 		public function ColorSelector( owner:ColorPicker )
 		{
@@ -162,7 +163,7 @@ package feathers.extensions.color.components
 			var rect:Rectangle = gradient.getBounds( gradient );
 			var point:Point = touch.getLocation( gradient );
 			if( ! rect.containsPoint( point ) ) return;
-			if (touch.phase == TouchPhase.BEGAN)
+			if(touch.phase == TouchPhase.BEGAN)
 			{
 				onGradientTouch( point );
 			}
@@ -206,11 +207,23 @@ package feathers.extensions.color.components
 		{
 			var touch:Touch = event.getTouch( stage );
 			if(!touch) return;
-			var point:Point = touch.getLocation( stage );
-			var rect:Rectangle = owner.colorQuad.getBounds( stage );
-			if( rect.containsPoint( point ) ) return;
-			if (touch.phase == TouchPhase.BEGAN)
+			if(touch.phase == TouchPhase.BEGAN)
 			{
+				var point:Point = touch.getLocation( stage );
+				var rect:Rectangle = owner.colorQuad.getBounds( stage );
+				if( rect.containsPoint( point ) )
+				{
+					if( ! isDispatchedColorQuadTouchBegan )
+					{
+						owner.open();
+					}
+					else
+					{
+						isDispatchedColorQuadTouchBegan = false;
+					}
+					return;
+				}
+				
 				var target:DisplayObject = DisplayObject(event.target);
 				if(this.contains(target))
 				{

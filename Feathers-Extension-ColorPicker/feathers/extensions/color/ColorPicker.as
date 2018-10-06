@@ -57,7 +57,7 @@ package feathers.extensions.color
 		 */
 		public var dispatchInputChange:Boolean;
 		/**
-		 * Determines if the color spectrum is open.
+		 * Determines ifthe color spectrum is open.
 		 */
 		public var isOpen:Boolean;
 		
@@ -334,8 +334,9 @@ package feathers.extensions.color
 		{
 			var touch:Touch = event.getTouch( colorQuad );
 			if(!touch) return;
-			if (touch.phase == TouchPhase.BEGAN)
+			if(touch.phase == TouchPhase.BEGAN)
 			{
+				colorSelector.isDispatchedColorQuadTouchBegan = true;
 				open();
 				/*if( ! isOpen )
 				{
