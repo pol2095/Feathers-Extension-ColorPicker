@@ -62,7 +62,7 @@ package feathers.extensions.color.utils
 				Starling.juggler.add(tween);
 			}
 			rewind = ! rewind;
-			return { isPlaying:isPlaying, isAtStart:isTweenStartAtStart };
+			return { isPlaying:isPlaying, isTweenStartAtStart:isTweenStartAtStart };
 		}
 		
 		private function complete():void
