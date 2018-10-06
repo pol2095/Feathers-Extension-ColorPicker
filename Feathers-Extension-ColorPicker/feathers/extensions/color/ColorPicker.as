@@ -14,6 +14,7 @@ package feathers.extensions.color
 	import feathers.extensions.color.components.ColorQuad;
 	import feathers.extensions.color.components.ColorSelector;
 	import feathers.extensions.color.components.Spacer;
+	import feathers.extensions.color.utils.Tween;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalAlign;
 	import flash.display.Bitmap;
@@ -21,14 +22,15 @@ package feathers.extensions.color
 	import flash.display.Shape;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import starling.animation.Transitions;
+	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.textures.Texture;
-	import starling.core.Starling;
+	import starling.textures.Texture;	
 	
 	/**
 	 *  The ColorPicker control provides a way for a user to choose a color from a spectrum.
@@ -55,7 +57,7 @@ package feathers.extensions.color
 		 */
 		public var dispatchInputChange:Boolean;
 		/**
-		 * @private
+		 * Determines if the color spectrum is open.
 		 */
 		public var isOpen:Boolean;
 		
@@ -191,6 +193,23 @@ package feathers.extensions.color
 		 */
 		public var scaleFactor:Number = Starling.current.contentScaleFactor;
 		
+		private var tween:Tween;
+		
+		private var _useTransition:Boolean = true;
+		/**
+		 * Use transition when color spectrum is opened or closed.
+		 *
+		 * @default true
+		 */
+		public function get useTransition():Boolean
+		{
+			return this._useTransition;
+		}
+		public function set useTransition(value:Boolean):void
+		{
+			this._useTransition = value;
+		}
+		
 		public function ColorPicker()
 		{
 			super();
@@ -251,6 +270,14 @@ package feathers.extensions.color
 				this.backgroundSkin = skin;
 				//bitmapData.dispose();
 			}
+			
+			if( useTransition )
+			{
+				colorSelector.alpha = 0;
+				tween = new Tween(colorSelector, 0.4, Transitions.EASE_OUT);
+				tween.addEventListener( Event.COMPLETE, onTweenComplete );
+				tween.fadeTo(1);
+			}
 		}
 		
 		private function onInputChange(event:Event):void
@@ -309,16 +336,17 @@ package feathers.extensions.color
 			if(!touch) return;
 			if (touch.phase == TouchPhase.BEGAN)
 			{
-				if( ! isOpen )
+				open();
+				/*if( ! isOpen )
 				{
-					/*PopUpManager.addPopUp( colorSelector, false, false );
+					PopUpManager.addPopUp( colorSelector, false, false );
 					positionRelative();
 					isOpen = true;
 					colorSelector.addEventListener(Event.ENTER_FRAME, colorSelector.enterFrameHandler);
 					stage.addEventListener(Event.RESIZE, positionRelative);*/
-					event.stopPropagation();
+					/*event.stopPropagation();
 					open();
-				}
+				}*/
 				/*else
 				{
 					PopUpManager.removePopUp( colorSelector );
@@ -332,14 +360,31 @@ package feathers.extensions.color
 		 */
 		public function open():void
 		{
-			if( ! isOpen )
+			if( useTransition && tween )
 			{
-				PopUpManager.addPopUp( colorSelector, false, false );
-				positionRelative();
-				isOpen = true;
-				stage.addEventListener(TouchEvent.TOUCH, colorSelector.stage_touchHandler);
-				stage.addEventListener(Event.RESIZE, positionRelative);
+				if( ! tween.isPlaying && ! tween.isTweenEndAtEnd )
+				{
+					openPopUp();
+				}
+				tween.start();
 			}
+			else if( ! isOpen )
+			{
+				openPopUp();
+			}
+			else
+			{
+				close();
+			}
+		}
+		
+		private function openPopUp():void
+		{
+			PopUpManager.addPopUp( colorSelector, false, false );
+			positionRelative();
+			isOpen = true;
+			stage.addEventListener(TouchEvent.TOUCH, colorSelector.stage_touchHandler);
+			stage.addEventListener(Event.RESIZE, positionRelative);
 		}
 		
 		/**
@@ -347,12 +392,36 @@ package feathers.extensions.color
 		 */
 		public function close():void
 		{
-			if( isOpen )
+			if( useTransition && tween )
 			{
-				stage.removeEventListener(TouchEvent.TOUCH, colorSelector.stage_touchHandler);
-				stage.removeEventListener(Event.RESIZE, positionRelative);
-				isOpen = false;
-				PopUpManager.removePopUp( colorSelector );
+				if( ! tween.isPlaying && tween.isTweenEndAtEnd )
+				{
+					tween.start();
+				}
+				else if( tween.isPlaying && ! tween.isTweenEndAtEnd )
+				{
+					tween.start();
+				}
+			}
+			else if( isOpen )
+			{
+				closePopUp();
+			}
+		}
+		
+		private function closePopUp():void
+		{
+			stage.removeEventListener(TouchEvent.TOUCH, colorSelector.stage_touchHandler);
+			stage.removeEventListener(Event.RESIZE, positionRelative);
+			isOpen = false;
+			PopUpManager.removePopUp( colorSelector );
+		}
+		
+		private function onTweenComplete(event:Event):void
+		{
+			if( ! event.data.isTweenEndAtEnd )
+			{
+				closePopUp();
 			}
 		}
 		

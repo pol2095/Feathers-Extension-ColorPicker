@@ -41,6 +41,7 @@ package feathers.extensions.color.components
 		private var gradient:ImageLoader = new ImageLoader();
 		public var slider:Slider = new Slider();
 		private var dispatchSliderChange:Boolean;
+		private var colorSpectrumBitmapData:BitmapData;
 		
 		public function ColorSelector( owner:ColorPicker )
 		{
@@ -75,7 +76,9 @@ package feathers.extensions.color.components
 		override protected function initialize():void
 		{
 			colorSpectrum.scale = 0.9;
-			colorSpectrum.source = Texture.fromBitmap( new ColorSpectrum() as Bitmap );
+			var bitmap:Bitmap = new ColorSpectrum() as Bitmap;
+			colorSpectrum.source = Texture.fromBitmap( bitmap );
+			colorSpectrumBitmapData = bitmap.bitmapData;
 			colorSpectrum.addEventListener(TouchEvent.TOUCH, onColorTouchEvent);
 			gradient.addEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			colorSpectrum.validate();
@@ -127,7 +130,7 @@ package feathers.extensions.color.components
 			targetQuad.x = _point.x;
 			targetQuad.y = _point.y;
 			point = touchLimit( point, touchIn);
-			var bitmapData:BitmapData = colorSpectrum.drawToBitmapData();
+			var bitmapData:BitmapData = colorSpectrumBitmapData; //colorSpectrum.drawToBitmapData();
 			var color:uint = bitmapData.getPixel( point.x * colorSpectrum.scale * owner.scaleFactor, point.y * colorSpectrum.scale * owner.scaleFactor );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
@@ -203,6 +206,9 @@ package feathers.extensions.color.components
 		{
 			var touch:Touch = event.getTouch( stage );
 			if(!touch) return;
+			var point:Point = touch.getLocation( stage );
+			var rect:Rectangle = owner.colorQuad.getBounds( stage );
+			if( rect.containsPoint( point ) ) return;
 			if (touch.phase == TouchPhase.BEGAN)
 			{
 				var target:DisplayObject = DisplayObject(event.target);
@@ -257,6 +263,7 @@ package feathers.extensions.color.components
 			colorSpectrum.removeEventListener(TouchEvent.TOUCH, onColorTouchEvent);
 			gradient.removeEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			slider.removeEventListener(Event.CHANGE, sliderChangeHandler);
+			colorSpectrumBitmapData.dispose();
 			if( owner.isOpen )
 			{
 				stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
