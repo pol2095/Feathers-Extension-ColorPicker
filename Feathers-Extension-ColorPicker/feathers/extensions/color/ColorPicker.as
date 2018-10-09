@@ -7,7 +7,6 @@ accordance with the terms of the accompanying license agreement.
 package feathers.extensions.color
 {
 	import feathers.controls.Label;
-	import feathers.controls.LayoutGroup;
 	import feathers.controls.Slider;
 	import feathers.controls.TextInput;
 	import feathers.core.PopUpManager;
@@ -15,6 +14,7 @@ package feathers.extensions.color
 	import feathers.extensions.color.components.ColorSelector;
 	import feathers.extensions.color.components.Spacer;
 	import feathers.extensions.color.utils.Tween;
+	import feathers.extensions.borderContainer.BorderContainer;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalAlign;
 	import flash.display.Bitmap;
@@ -38,7 +38,7 @@ package feathers.extensions.color
 	 *  When the user clicks the swatch button, the swatch panel appears and
 	 *  displays the entire color spectrum.
 	 */
-	public class ColorPicker extends LayoutGroup
+	public class ColorPicker extends BorderContainer
 	{
 		/**
 		 * @private
@@ -61,12 +61,12 @@ package feathers.extensions.color
 		 */
 		public var isOpen:Boolean;
 		
-		private var _backgroundBorderColor:uint = 0x000000;
+		/*private var _backgroundBorderColor:uint = 0x000000;
 		/**
 		 * The color of the background border.
 		 *
 		 * @default 0x000000
-		 */
+		 * /
 		public function get backgroundBorderColor():uint
 		{
 			return this._backgroundBorderColor;
@@ -74,14 +74,14 @@ package feathers.extensions.color
 		public function set backgroundBorderColor(value:uint):void
 		{
 			this._backgroundBorderColor = value;
-		}
+		}*/
 		
-		private var _backgroundColor:uint = 0x393430;
+		/*private var _backgroundColor:uint = 0x393430;
 		/**
 		 * The color of the background.
 		 *
 		 * @default 0x393430
-		 */
+		 * /
 		public function get backgroundColor():uint
 		{
 			return this._backgroundColor;
@@ -89,7 +89,7 @@ package feathers.extensions.color
 		public function set backgroundColor(value:uint):void
 		{
 			this._backgroundColor = value;
-		}
+		}*/
 		
 		private var _marginPopUpLeft:Number = 0;
 		/**
@@ -254,7 +254,7 @@ package feathers.extensions.color
 			colorText.dispatchEvent( new Event ( Event.CHANGE ) );
 			//colorQuad.color = this.color;
 			
-			if( ! this.backgroundSkin )
+			/*if( ! this.backgroundSkin )
 			{
 				var shape:Shape = new Shape();
 				shape.graphics.beginFill(backgroundBorderColor);
@@ -269,7 +269,7 @@ package feathers.extensions.color
 				skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
 				this.backgroundSkin = skin;
 				//bitmapData.dispose();
-			}
+			}*/
 			
 			if( useTransition )
 			{
@@ -500,8 +500,9 @@ package feathers.extensions.color
 		override public function set backgroundSkin(value:DisplayObject):void
 		{
 			super.backgroundSkin = value;
-			var skin:Image = new Image( (value as Image).texture );
-			skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
+			var image:Image = value as Image;
+			var skin:Image = new Image( image.texture );
+			skin.scale9Grid = image.scale9Grid;
 			colorSelector.backgroundSkin = skin;
 		}
 		
