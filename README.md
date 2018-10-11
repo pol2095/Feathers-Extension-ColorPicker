@@ -6,7 +6,7 @@ The ColorPicker control provides a way for a user to choose a color from a spect
 
 ## Quick Links
 
-* [Website](http://pol2095.free.fr/Starling-Feathers-Extensions/)
+* [Website](http://pol2095.free.fr/Feathers-Extension-ColorPicker/)
 * [API Reference](http://pol2095.free.fr/Starling-Feathers-Extensions/docs/feathers/extensions/color/package-detail.html)
 * [Discussion Forum](http://forum.starling-framework.org/forum/feathers)
 * [Github Project](https://github.com/pol2095/Feathers-Extension-ColorPicker)
