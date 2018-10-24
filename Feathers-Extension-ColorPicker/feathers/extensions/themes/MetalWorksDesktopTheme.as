@@ -16,7 +16,7 @@ package feathers.extensions.themes
 	{
 		private var classes:Vector.<String> = new <String>[
 			"feathers.extensions.borderContainer.BorderContainer",
-			"feathers.controls.ToggleButton"
+			"feathers.extensions.dataGrid.DataGridToggleButton"
 		];
 		
 		public function MetalWorksDesktopTheme()
@@ -41,7 +41,7 @@ package feathers.extensions.themes
 					}
 					else if( i == 1 )
 					{
-						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).setFunctionForStyleName("toggleButton-arrow", this.setToggleButtonArrowtyles);
+						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).setFunctionForStyleName("toggleButton-arrow", this.setToggleButtonArrowStyles);
 					}
 				}
 			}
@@ -60,7 +60,7 @@ package feathers.extensions.themes
 		/**
 		 * @private 
 		 */
-		protected function setToggleButtonArrowtyles(toggleButton:Object):void
+		protected function setToggleButtonArrowStyles(toggleButton:Object):void
 		{
 			this.setTabStyles(toggleButton as ToggleButton);
 			toggleButton.toggleArrowBottom = this.atlas.getTexture("callout-arrow-bottom-skin0000"); 
