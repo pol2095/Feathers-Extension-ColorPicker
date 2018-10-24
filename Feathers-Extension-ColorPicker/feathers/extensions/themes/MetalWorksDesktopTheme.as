@@ -6,17 +6,20 @@ accordance with the terms of the accompanying license agreement.
 */
 package feathers.extensions.themes
 {
+	import feathers.controls.Button;
 	import feathers.controls.ToggleButton;
 	import feathers.themes.MetalWorksDesktopTheme;
 	import flash.system.ApplicationDomain;
 	import flash.utils.getDefinitionByName;
 	import starling.display.Image;
+	import starling.textures.Texture;
  
 	public class MetalWorksDesktopTheme extends feathers.themes.MetalWorksDesktopTheme
 	{
 		private var classes:Vector.<String> = new <String>[
+			"feathers.extensions.dataGrid.DataGridToggleButton",
 			"feathers.extensions.borderContainer.BorderContainer",
-			"feathers.extensions.dataGrid.DataGridToggleButton"
+			"feathers.extensions.color.components.SliderButton"
 		];
 		
 		public function MetalWorksDesktopTheme()
@@ -37,11 +40,15 @@ package feathers.extensions.themes
 				{
 					if( i == 0 )
 					{
-						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).defaultStyleFunction = this.setBorderContainerStyles;
+						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).setFunctionForStyleName("toggleButton-arrow", this.setToggleButtonArrowStyles);
 					}
 					else if( i == 1 )
 					{
-						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).setFunctionForStyleName("toggleButton-arrow", this.setToggleButtonArrowStyles);
+						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).defaultStyleFunction = this.setBorderContainerStyles;
+					}
+					else if( i == 2 )
+					{
+						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).defaultStyleFunction = this.setSliderButtonStyles;
 					}
 				}
 			}
@@ -65,6 +72,19 @@ package feathers.extensions.themes
 			this.setTabStyles(toggleButton as ToggleButton);
 			toggleButton.toggleArrowBottom = this.atlas.getTexture("callout-arrow-bottom-skin0000"); 
 			toggleButton.toggleArrowUp = this.atlas.getTexture("callout-arrow-top-skin0000");
+		}
+		
+		/**
+		 * @private 
+		 */
+		protected function setSliderButtonStyles(button:Object):void
+		{
+			this.setButtonStyles(button as Button);
+			//button.defaultIcon = new Image( texture );
+			var texture:Texture = this.atlas.getTexture("danger-callout-arrow-left-skin0000")
+			button.disabledSkin = new Image( texture );
+			button.defaultSkin = new Image( texture );
+			button.downSkin = new Image( texture );
 		}
 	}
 }

@@ -6,6 +6,7 @@ accordance with the terms of the accompanying license agreement.
 */
 package feathers.extensions.color.components
 {
+	import feathers.controls.Button;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
 	import feathers.controls.Slider;
@@ -14,6 +15,7 @@ package feathers.extensions.color.components
 	import feathers.extensions.color.ColorPicker;
 	import feathers.layout.Direction;
 	import feathers.layout.HorizontalLayout;
+	import feathers.layout.VerticalAlign;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.GradientType;
@@ -21,6 +23,7 @@ package feathers.extensions.color.components
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import feathers.events.FeathersEventType;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -41,8 +44,10 @@ package feathers.extensions.color.components
 		private var gradient:ImageLoader = new ImageLoader();
 		public var slider:Slider = new Slider();
 		private var dispatchSliderChange:Boolean;
-		private var colorSpectrumBitmapData:BitmapData;
+		private var spectrumBitmapData:BitmapData;
+		private var gradientBitmapData:BitmapData;
 		public var isDispatchedColorQuadTouchBegan:Boolean; //Determines for touch began if an interactive DisplayObject is over colorQuad.
+		private var thumbs:Button;
 		
 		public function ColorSelector( owner:ColorPicker )
 		{
@@ -53,6 +58,7 @@ package feathers.extensions.color.components
 			horizontalLayout.paddingBottom = 5;
 			horizontalLayout.paddingLeft = 5;
 			horizontalLayout.paddingRight = 5;
+			//horizontalLayout.verticalAlign = VerticalAlign.MIDDLE;
 			this.layout = horizontalLayout;
 			
 			this.addChild( colorSpectrum );
@@ -76,19 +82,22 @@ package feathers.extensions.color.components
 		 */
 		override protected function initialize():void
 		{
+			super.initialize();
 			colorSpectrum.scale = 0.9;
 			var bitmap:Bitmap = new ColorSpectrum() as Bitmap;
 			colorSpectrum.source = Texture.fromBitmap( bitmap );
-			colorSpectrumBitmapData = bitmap.bitmapData;
-			colorSpectrum.addEventListener(TouchEvent.TOUCH, onColorTouchEvent);
+			spectrumBitmapData = bitmap.bitmapData;
+			colorSpectrum.addEventListener(TouchEvent.TOUCH, onSpectrumTouchEvent);
 			gradient.addEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			colorSpectrum.validate();
-			gradient.height = colorSpectrum.height;
+			createGradient( owner.color );
+			gradient.validate();
+			gradient.scale = colorSpectrum.height / gradient.height;
 			slider.height = colorSpectrum.height;
 			dispatchSliderChange = false;
 			slider.value = 50;
 			slider.addEventListener(Event.CHANGE, sliderChangeHandler);
-			createGradient( owner.color );
+			
 			
 			/*var shape:Shape = new Shape();
 			shape.graphics.beginFill(owner.backgroundBorderColor);
@@ -103,9 +112,43 @@ package feathers.extensions.color.components
 			skin.scale9Grid = new Rectangle( 3, 3, 4, 4 );
 			this.backgroundSkin = skin;*/
 			//bitmapData.dispose();
+			if( owner.sliderSkin == "sliderArrow" )
+			{
+				(this.layout as HorizontalLayout).verticalAlign = VerticalAlign.MIDDLE;
+				//slider.showThumb = false;
+				slider.thumbFactory = function():Button
+				{
+					var button:SliderButton = new SliderButton();
+					thumbs = button;
+					return button;
+				}
+				slider.minimumTrackFactory = function():Button
+				{
+					var track:Button = new Button();
+					//track.alpha = 0;
+					track.visible = false;
+					return track;
+				}
+				slider.maximumTrackFactory = function():Button
+				{
+					var track:Button = new Button();
+					track.visible = false;
+					return track;
+				}
+				/*slider.customMinimumTrackStyleName = null;
+				slider.customMaximumTrackStyleName = null;
+				slider.focusIndicatorSkin = null;*/
+				slider.addEventListener( FeathersEventType.CREATION_COMPLETE, sliderCreationCompleteHandler );
+			}
 		}
 		
-		private function onColorTouchEvent(event:TouchEvent):void
+		private function sliderCreationCompleteHandler():void
+		{
+			slider.removeEventListener( FeathersEventType.CREATION_COMPLETE, sliderCreationCompleteHandler );
+			slider.height += thumbs.height;
+		}
+		
+		private function onSpectrumTouchEvent(event:TouchEvent):void
 		{
 			var touch:Touch = event.getTouch( colorSpectrum );
 			if( ! touch ) return;
@@ -117,22 +160,22 @@ package feathers.extensions.color.components
 			var _point:Point = touch.getLocation( this );
 			if(touch.phase == TouchPhase.BEGAN)
 			{
-				onColorTouch( point, _point, true );
+				onSpectrumTouch( point, _point, true );
 			}
 			if(touch.phase == TouchPhase.MOVED)
 			{
 				var touchIn:Boolean = rect.containsPoint( point );
-				onColorTouch( point, _point, touchIn );
+				onSpectrumTouch( point, _point, touchIn );
 			}
 		}
 		
-		private function onColorTouch(point:Point, _point:Point, touchIn:Boolean):void
+		private function onSpectrumTouch(point:Point, _point:Point, touchIn:Boolean):void
 		{
 			targetQuad.x = _point.x;
 			targetQuad.y = _point.y;
-			point = touchLimit( point, touchIn);
-			var bitmapData:BitmapData = colorSpectrumBitmapData; //colorSpectrum.drawToBitmapData();
-			var color:uint = bitmapData.getPixel( point.x * colorSpectrum.scale * owner.scaleFactor, point.y * colorSpectrum.scale * owner.scaleFactor );
+			point = touchLimitSpectrum( point, touchIn );
+			var bitmapData:BitmapData = spectrumBitmapData; //colorSpectrum.drawToBitmapData();
+			var color:uint = bitmapData.getPixel( point.x, point.y );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
 			//owner.colorQuad.color = color;
@@ -148,9 +191,9 @@ package feathers.extensions.color.components
 			shape.graphics.beginGradientFill(GradientType.LINEAR, [0xFFFFFF, color, 0x000000], [1, 1, 1], [0, 128, 255], gradientBoxMatrix); 
 			shape.graphics.drawRect(0, 0, 20, 200); 
 			shape.graphics.endFill();
-			var bitmapData:BitmapData = new BitmapData( shape.width, shape.height );
-			bitmapData.draw( shape );
-			gradient.source = Texture.fromBitmap( new Bitmap( bitmapData ) );
+			gradientBitmapData = new BitmapData( shape.width, shape.height );
+			gradientBitmapData.draw( shape );
+			gradient.source = Texture.fromBitmap( new Bitmap( gradientBitmapData ) );
 			dispatchSliderChange = false;
 			slider.value=50;
 			//bitmapData.dispose();
@@ -160,23 +203,25 @@ package feathers.extensions.color.components
 		{
 			var touch:Touch = event.getTouch( gradient );
 			if(!touch) return;
-			var rect:Rectangle = gradient.getBounds( gradient );
+			//var rect:Rectangle = gradient.getBounds( gradient );
 			var point:Point = touch.getLocation( gradient );
-			if( ! rect.containsPoint( point ) ) return;
+			//if( ! rect.containsPoint( point ) ) return;
 			if(touch.phase == TouchPhase.BEGAN)
 			{
 				onGradientTouch( point );
 			}
 			if(touch.phase == TouchPhase.MOVED)
 			{
+				var rect:Rectangle = gradient.getBounds( gradient );
+				if( ! rect.containsPoint( point ) ) point = touchLimitGradient( point, rect );
 				onGradientTouch( point );
 			}
 		}
 		
 		private function onGradientTouch(point:Point):void
 		{
-			var bitmapData:BitmapData = gradient.drawToBitmapData();
-			var color:uint = bitmapData.getPixel( point.x * gradient.scale * owner.scaleFactor, point.y * gradient.scale * owner.scaleFactor );
+			var bitmapData:BitmapData = gradientBitmapData; //gradient.drawToBitmapData();
+			var color:uint = bitmapData.getPixel( point.x, point.y );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
 			//owner.colorQuad.color = color;
@@ -193,9 +238,9 @@ package feathers.extensions.color.components
 				return;
 			}
 			var slider:Slider = Slider( event.currentTarget );
-			var y:uint = (slider.maximum - slider.value) * ( gradient.height * gradient.scaleY * owner.scaleFactor ) / slider.maximum;
+			var y:uint = (slider.maximum - slider.value) * ( gradient.height / gradient.scaleY ) / slider.maximum;
 			var point:Point = new Point( 0, y );
-			var bitmapData:BitmapData = gradient.drawToBitmapData();
+			var bitmapData:BitmapData = gradientBitmapData; //gradient.drawToBitmapData();
 			var color:uint = bitmapData.getPixel( point.x, point.y );
 			owner.dispatchInputChange = false;
 			owner.colorText.text = color.toString(16).toUpperCase();
@@ -245,7 +290,7 @@ package feathers.extensions.color.components
 			}
 		}
 		
-		private function touchLimit(point:Point, touchIn:Boolean):Point
+		private function touchLimitSpectrum(point:Point, touchIn:Boolean):Point
 		{
 			if( touchIn ) return point;
 			if( targetQuad.x < colorSpectrum.x )
@@ -271,12 +316,34 @@ package feathers.extensions.color.components
 			return point;
 		}
 		
+		private function touchLimitGradient(point:Point, rect:Rectangle):Point
+		{
+			if( point.x < rect.x )
+			{
+				point.x = rect.x;
+			}
+			else if( point.x > rect.x + rect.width )
+			{
+				point.x = rect.x + rect.width - 1;
+			}
+			if( point.y < rect.y )
+			{
+				point.y = rect.y;
+			}
+			else if( point.y > rect.y + rect.height )
+			{
+				point.x = rect.y + rect.height;
+			}
+			return point;
+		}
+		
 		override public function dispose():void
 		{
-			colorSpectrum.removeEventListener(TouchEvent.TOUCH, onColorTouchEvent);
+			colorSpectrum.removeEventListener(TouchEvent.TOUCH, onSpectrumTouchEvent);
 			gradient.removeEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			slider.removeEventListener(Event.CHANGE, sliderChangeHandler);
-			colorSpectrumBitmapData.dispose();
+			spectrumBitmapData.dispose();
+			if( gradientBitmapData ) gradientBitmapData.dispose();
 			if( owner.isOpen )
 			{
 				stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);

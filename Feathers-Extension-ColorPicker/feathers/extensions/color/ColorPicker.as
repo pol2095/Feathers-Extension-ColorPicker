@@ -30,7 +30,22 @@ package feathers.extensions.color
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.textures.Texture;	
+	import starling.textures.Texture;
+	
+	/**
+	 * The skin of the pop-up gradient slider.
+	 *
+	 * <p>In the following example,the skin of the pop-up gradient slider is an arrow:</p>
+	 *
+	 * <p><listing version="3.0">
+	 * colorPicker.sliderSkin = ColorPicker.ARROW;</listing></p>
+	 *
+	 * @default normal
+	 *
+	 * @see feathers.extensions.color.ColorPicker#SLIDER_NORMAL
+	 * @see feathers.extensions.color.ColorPicker#SLIDER_ARROW
+	 */
+	[Style(name="sliderSkin",type="String")]
 	
 	/**
 	 *  The ColorPicker control provides a way for a user to choose a color from a spectrum.
@@ -40,6 +55,38 @@ package feathers.extensions.color
 	 */
 	public class ColorPicker extends BorderContainer
 	{
+		/**
+		 * The skin of the pop-up gradient slider is a classic Feathers Slider.
+		 */
+		public static const SLIDER_NORMAL:String = "sliderNormal";
+		
+		/**
+		 * The skin of the pop-up gradient slider is an arrow.
+		 */
+		public static const SLIDER_ARROW:String = "sliderArrow";
+		
+		/**
+		 * @private
+		 */
+		protected var _sliderSkin:String;
+		
+		[Inspectable(type="String",enumeration="sliderNormal,sliderArrow")]
+		/**
+		 * @private
+		 */
+		public function get sliderSkin():String
+		{
+			return this._sliderSkin;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set sliderSkin(value:String):void
+		{
+			this._sliderSkin = value;
+		}
+		
 		/**
 		 * @private
 		 */
@@ -187,11 +234,6 @@ package feathers.extensions.color
 		{
 			return this.colorSelector.slider;
 		}
-		
-		/**
-		 * @private
-		 */
-		public var scaleFactor:Number = Starling.current.contentScaleFactor;
 		
 		private var tween:Tween;
 		
