@@ -38,7 +38,7 @@ package feathers.extensions.color
 	 * <p>In the following example,the skin of the pop-up gradient slider is an arrow:</p>
 	 *
 	 * <p><listing version="3.0">
-	 * colorPicker.sliderSkin = ColorPicker.ARROW;</listing></p>
+	 * colorPicker.sliderSkin = ColorPicker.SLIDER_ARROW;</listing></p>
 	 *
 	 * @default normal
 	 *
@@ -250,6 +250,14 @@ package feathers.extensions.color
 		public function set useTransition(value:Boolean):void
 		{
 			this._useTransition = value;
+		}
+		
+		/**
+		 * Gets the string value of the current color selection.
+		 */
+		public function get hexValue():String
+		{
+			return colorText.text;
 		}
 		
 		public function ColorPicker()
