@@ -343,7 +343,7 @@ package feathers.extensions.color.components
 			gradient.removeEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			slider.removeEventListener(Event.CHANGE, sliderChangeHandler);
 			spectrumBitmapData.dispose();
-			if( gradientBitmapData ) gradientBitmapData.dispose();
+			gradientBitmapData.dispose();
 			if( owner.isOpen )
 			{
 				stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
