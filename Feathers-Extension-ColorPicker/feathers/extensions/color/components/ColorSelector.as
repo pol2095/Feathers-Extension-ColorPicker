@@ -90,13 +90,13 @@ package feathers.extensions.color.components
 			colorSpectrum.addEventListener(TouchEvent.TOUCH, onSpectrumTouchEvent);
 			gradient.addEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			colorSpectrum.validate();
+			slider.addEventListener(Event.CHANGE, sliderChangeHandler);
 			createGradient( owner.color );
 			gradient.validate();
 			gradient.scale = colorSpectrum.height / gradient.height;
 			slider.height = colorSpectrum.height;
-			dispatchSliderChange = false;
-			slider.value = 50;
-			slider.addEventListener(Event.CHANGE, sliderChangeHandler);
+			/*dispatchSliderChange = false;
+			slider.value = 50;*/
 			
 			
 			/*var shape:Shape = new Shape();
