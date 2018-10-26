@@ -104,7 +104,7 @@ package feathers.extensions.color
 		 */
 		public var dispatchInputChange:Boolean;
 		/**
-		 * Determines ifthe color spectrum is open.
+		 * Determines if the color spectrum is open.
 		 */
 		public var isOpen:Boolean;
 		
