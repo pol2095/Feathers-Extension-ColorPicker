@@ -40,7 +40,7 @@ package feathers.extensions.color
 	 * <p><listing version="3.0">
 	 * colorPicker.sliderSkin = ColorPicker.SLIDER_ARROW;</listing></p>
 	 *
-	 * @default normal
+	 * @default sliderNormal
 	 *
 	 * @see feathers.extensions.color.ColorPicker#SLIDER_NORMAL
 	 * @see feathers.extensions.color.ColorPicker#SLIDER_ARROW
