@@ -102,7 +102,7 @@ package feathers.extensions.color
 		/**
 		 * @private
 		 */
-		public var dispatchInputChange:Boolean;
+		public var dispatchInputChange:Boolean = true;
 		/**
 		 * Determines if the color spectrum is open.
 		 */
@@ -200,7 +200,7 @@ package feathers.extensions.color
 		
 		private var _color:uint = 0xFF0000;
 		/**
-		 * The value of the currently selected color.
+		 * The value of the currently color selection.
 		 *
 		 * @default 0xFF0000
 		 */
@@ -253,8 +253,22 @@ package feathers.extensions.color
 		}
 		
 		/**
-		 * Gets the string value of the current color selection.
+		 * The string value of the current color selection.
 		 */
+		public function set hexValue(value:String):void
+		{
+			//if( value.substring(0, 1) == "#" ) value = value.substring(1);
+			if( value.substring(0, 2).toLowerCase() == "0x" ) value = value.substring(2);
+			var pattern:RegExp = /[^a-f^A-F^0-9]/g;
+			value = value.replace(pattern, "");
+			if( value.length > 6 ) value = value.substring(0, 6);
+			var length:int = value.length;
+			for(var i:int = 0; i < 6 - length; i++)
+			{
+				value = "0" + value;
+			}
+			colorText.text = value;
+		}
 		public function get hexValue():String
 		{
 			return colorText.text;
