@@ -19,6 +19,7 @@ package feathers.extensions.themes
 		private var classes:Vector.<String> = new <String>[
 			"feathers.extensions.dataGrid.DataGridToggleButton",
 			"feathers.extensions.borderContainer.BorderContainer",
+			"feathers.extensions.borderContainer.BorderScrollContainer",
 			"feathers.extensions.color.components.SliderButton"
 		];
 		
@@ -48,6 +49,10 @@ package feathers.extensions.themes
 					}
 					else if( i == 2 )
 					{
+						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).defaultStyleFunction = this.setBorderScrollContainerStyles;
+					}
+					else if( i == 3 )
+					{
 						this.getStyleProviderForClass( getDefinitionByName( classes[i] ) as Class ).defaultStyleFunction = this.setSliderButtonStyles;
 					}
 				}
@@ -62,6 +67,16 @@ package feathers.extensions.themes
 			var backgroundSkin:Image = new Image(this.backgroundPopUpSkinTexture);
 			backgroundSkin.scale9Grid = SIMPLE_SCALE9_GRID;
 			borderContainer.backgroundSkin = backgroundSkin;
+		}
+		
+		/**
+		 * @private 
+		 */
+		protected function setBorderScrollContainerStyles(borderScrollContainer:Object):void
+		{
+			var backgroundSkin:Image = new Image(this.backgroundPopUpSkinTexture);
+			backgroundSkin.scale9Grid = SIMPLE_SCALE9_GRID;
+			borderScrollContainer.backgroundSkin = backgroundSkin;
 		}
 		
 		/**
