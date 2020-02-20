@@ -185,6 +185,9 @@ package feathers.extensions.color.components
 		
 		public function createGradient(color:uint):void
 		{
+			if(gradient.source) Texture(gradient.source).dispose();
+			if(gradientBitmapData) gradientBitmapData.dispose();
+			
 			var shape:Shape = new Shape(); 
 			var gradientBoxMatrix:Matrix = new Matrix(); 
 			gradientBoxMatrix.createGradientBox(20, 200, Math.PI/2, 0, 0); 
@@ -342,8 +345,10 @@ package feathers.extensions.color.components
 			colorSpectrum.removeEventListener(TouchEvent.TOUCH, onSpectrumTouchEvent);
 			gradient.removeEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			slider.removeEventListener(Event.CHANGE, sliderChangeHandler);
-			spectrumBitmapData.dispose();
-			gradientBitmapData.dispose();
+			if(colorSpectrum.source) Texture(colorSpectrum.source).dispose();
+			if(spectrumBitmapData) spectrumBitmapData.dispose();
+			if(gradient.source) Texture(gradient.source).dispose();
+			if(gradientBitmapData) gradientBitmapData.dispose();
 			if( owner.isOpen )
 			{
 				stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
