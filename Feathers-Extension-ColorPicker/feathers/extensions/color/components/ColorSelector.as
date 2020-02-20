@@ -169,15 +169,17 @@ package feathers.extensions.color.components {
 			createGradient(color);
 			//bitmapData.dispose();
 		}
-
-		public function createGradient(color: uint): void {
-			if (gradient.source) Texture(gradient.source).dispose();
-			if (gradientBitmapData) gradientBitmapData.dispose();
-			var shape: Shape = new Shape();
-			var gradientBoxMatrix: Matrix = new Matrix();
-			gradientBoxMatrix.createGradientBox(20, 200, Math.PI / 2, 0, 0);
-			shape.graphics.beginGradientFill(GradientType.LINEAR, [0xFFFFFF, color, 0x000000], [1, 1, 1], [0, 128, 255], gradientBoxMatrix);
-			shape.graphics.drawRect(0, 0, 20, 200);
+		
+		public function createGradient(color:uint):void
+		{
+			if(gradient.source) Texture(gradient.source).dispose();
+			if(gradientBitmapData) gradientBitmapData.dispose();
+			
+			var shape:Shape = new Shape(); 
+			var gradientBoxMatrix:Matrix = new Matrix(); 
+			gradientBoxMatrix.createGradientBox(20, 200, Math.PI/2, 0, 0); 
+			shape.graphics.beginGradientFill(GradientType.LINEAR, [0xFFFFFF, color, 0x000000], [1, 1, 1], [0, 128, 255], gradientBoxMatrix); 
+			shape.graphics.drawRect(0, 0, 20, 200); 
 			shape.graphics.endFill();
 			gradientBitmapData = new BitmapData(shape.width, shape.height);
 			gradientBitmapData.draw(shape);
@@ -301,9 +303,12 @@ package feathers.extensions.color.components {
 			colorSpectrum.removeEventListener(TouchEvent.TOUCH, onSpectrumTouchEvent);
 			gradient.removeEventListener(TouchEvent.TOUCH, onGradientTouchEvent);
 			slider.removeEventListener(Event.CHANGE, sliderChangeHandler);
-			spectrumBitmapData.dispose();
-			gradientBitmapData.dispose();
-			if (owner.isOpen) {
+			if(colorSpectrum.source) Texture(colorSpectrum.source).dispose();
+			if(spectrumBitmapData) spectrumBitmapData.dispose();
+			if(gradient.source) Texture(gradient.source).dispose();
+			if(gradientBitmapData) gradientBitmapData.dispose();
+			if( owner.isOpen )
+			{
 				stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
 				stage.removeEventListener(Event.RESIZE, owner.positionRelative);
 			}
