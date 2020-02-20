@@ -34,7 +34,7 @@ package feathers.extensions.color.components
 	
 	public class ColorSelector extends LayoutGroup
 	{
-		[Embed(source='../assets/ColorSpectrum.jpg')]  
+		[Embed(source='../assets/ColorSpectrum.jpg')]
 		private var ColorSpectrum:Class;
 		
 		private var owner:ColorPicker;
@@ -188,11 +188,11 @@ package feathers.extensions.color.components
 			if(gradient.source) Texture(gradient.source).dispose();
 			if(gradientBitmapData) gradientBitmapData.dispose();
 			
-			var shape:Shape = new Shape(); 
-			var gradientBoxMatrix:Matrix = new Matrix(); 
-			gradientBoxMatrix.createGradientBox(20, 200, Math.PI/2, 0, 0); 
-			shape.graphics.beginGradientFill(GradientType.LINEAR, [0xFFFFFF, color, 0x000000], [1, 1, 1], [0, 128, 255], gradientBoxMatrix); 
-			shape.graphics.drawRect(0, 0, 20, 200); 
+			var shape:Shape = new Shape();
+			var gradientBoxMatrix:Matrix = new Matrix();
+			gradientBoxMatrix.createGradientBox(20, 200, Math.PI/2, 0, 0);
+			shape.graphics.beginGradientFill(GradientType.LINEAR, [0xFFFFFF, color, 0x000000], [1, 1, 1], [0, 128, 255], gradientBoxMatrix);
+			shape.graphics.drawRect(0, 0, 20, 200);
 			shape.graphics.endFill();
 			gradientBitmapData = new BitmapData( shape.width, shape.height );
 			gradientBitmapData.draw( shape );
