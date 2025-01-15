@@ -310,6 +310,8 @@ package feathers.extensions.color
 		 */
 		override protected function initialize():void
 		{
+			super.initialize();
+			
 			colorText.validate();
 			colorText.width = colorText.minWidth;
 			colorQuad.size = colorText.height;
@@ -502,10 +504,10 @@ package feathers.extensions.color
 			var picRect:Rectangle = this.getBounds( stage );
 			if( colorSelector.height == 0 ) colorSelector.validate();
 			var selRect:Rectangle = colorSelector.getBounds( stage );
-			if( picRect.y + picRect.height + gap + selRect.height <= rect.height)
+			if( picRect.y + picRect.height + gap + selRect.height + rect.y <= rect.height)
 			{
 				pos.x = picRect.x < rect.x ? rect.x : picRect.x;
-				pos.y = picRect.y + picRect.height + gap;
+				pos.y = picRect.y + picRect.height + gap + rect.y;
 				if( pos.x + selRect.width > rect.width)
 				{
 					pos.x = rect.width - selRect.width;
@@ -515,16 +517,16 @@ package feathers.extensions.color
 			else if( picRect.y - gap - selRect.height >= rect.y)
 			{
 				pos.x = picRect.x < rect.x ? rect.x : picRect.x;
-				pos.y = picRect.y - gap - selRect.height;
+				pos.y = picRect.y - gap - selRect.height - rect.y;
 				if( picRect.x + selRect.width > rect.width)
 				{
 					pos.x = rect.width - selRect.width;
 				}
 				if( pos.x < rect.x ) isCentered = true;
 			}
-			else if( picRect.x + picRect.width + gap + selRect.width <= rect.width)
+			else if( picRect.x + picRect.width + gap + selRect.width + rect.x <= rect.width)
 			{
-				pos.x = picRect.x + picRect.width + gap;
+				pos.x = picRect.x + picRect.width + gap + rect.x;
 				pos.y = picRect.y < rect.y ? rect.y : picRect.y ;
 				if( pos.y + selRect.height > rect.height)
 				{
@@ -532,9 +534,9 @@ package feathers.extensions.color
 				}
 				if( pos.y < rect.y ) isCentered = true;
 			}
-			else if( picRect.x - gap - selRect.width >= rect.y)
+			else if( picRect.x - gap - selRect.width >= rect.x)
 			{
-				pos.x = picRect.x - gap - selRect.width;
+				pos.x = picRect.x - gap - selRect.width - rect.x;
 				pos.y = picRect.y < rect.y ? rect.y : picRect.y;
 				if( pos.y + selRect.height > rect.height)
 				{

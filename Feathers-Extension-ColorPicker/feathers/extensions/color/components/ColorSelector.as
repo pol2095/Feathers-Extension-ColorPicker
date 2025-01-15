@@ -309,7 +309,7 @@ package feathers.extensions.color.components
 			if( targetQuad.y < colorSpectrum.y )
 			{
 				targetQuad.y = colorSpectrum.y;
-				point.y = targetQuad.y - (this.layout as HorizontalLayout).paddingTop;;
+				point.y = targetQuad.y - (this.layout as HorizontalLayout).paddingTop;
 			}
 			else if( targetQuad.y > colorSpectrum.y + colorSpectrum.height )
 			{
