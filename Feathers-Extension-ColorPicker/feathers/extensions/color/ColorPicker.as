@@ -301,7 +301,7 @@ package feathers.extensions.color
 			colorText.addEventListener(Event.CHANGE, onInputChange);
 			colorText.restrict = "0-9a-fA-F";
 			colorText.maxChars = 6;
-			colorText.typicalText = "CCCCCC";
+			colorText.typicalText = "DDDDDD";
 			this.addChild( colorText );
 		}
 		
