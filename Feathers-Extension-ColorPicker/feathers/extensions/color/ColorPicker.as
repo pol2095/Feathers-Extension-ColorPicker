@@ -22,6 +22,8 @@ package feathers.extensions.color
 	import flash.display.Shape;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
+	//import flash.text.StageTextClearButtonMode;
 	import starling.animation.Transitions;
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
@@ -302,6 +304,7 @@ package feathers.extensions.color
 			colorText.restrict = "0-9a-fA-F";
 			colorText.maxChars = 6;
 			colorText.typicalText = "DDDDDD";
+			if( isIOS ) colorText.textEditorProperties.clearButtonMode = "never"; // StageTextClearButtonMode.NEVER;
 			this.addChild( colorText );
 		}
 		
@@ -570,6 +573,11 @@ package feathers.extensions.color
 			var skin:Image = new Image( image.texture );
 			skin.scale9Grid = image.scale9Grid;
 			colorSelector.backgroundSkin = skin;
+		}
+		
+		private function get isIOS():Boolean
+		{
+			return Capabilities.os.indexOf("iPhone") >= 0 || Capabilities.os.indexOf("iPad") >= 0;
 		}
 		
 		/**
